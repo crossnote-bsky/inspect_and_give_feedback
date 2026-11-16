@@ -166,6 +166,7 @@ const CONFIG = {
   LABELER_HANDLE: 'crossnote.bsky.social',
   REPO_URL: 'https://github.com/crossnote-bsky/crossnote_bsky',
   PAPER_URL: 'https://github.com/crossnote-bsky/crossnote_bsky/blob/main/paper/community-notes-across-platforms.pdf',  // switch to arXiv once posted
+  SLIDES_URL: 'https://github.com/crossnote-bsky/crossnote_bsky/blob/main/paper/crossnote-slides.pdf',
   // Stage 1 settings shown on the front page (configs/thresholds.yaml). Post
   // pages use the values the server returns for that match.
   TFIDF_THRESHOLD: 0.1375895433401011,
@@ -288,6 +289,7 @@ const CONFIG = {
     return h('footer', null,
       h('p', null, 'More info: ',
         CONFIG.PAPER_URL ? [ext(CONFIG.PAPER_URL, 'Paper'), ' · '] : null,
+        CONFIG.SLIDES_URL ? [ext(CONFIG.SLIDES_URL, 'Slides'), ' · '] : null,
         ext(CONFIG.REPO_URL, 'GitHub')),
       extra ? h('p', null, extra) : null);
   }
