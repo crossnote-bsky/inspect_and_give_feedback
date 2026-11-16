@@ -48,22 +48,22 @@
   }
   a { color: var(--link); }
   a:hover { color: var(--link-hover); }
-  main { max-width: 960px; margin: 0 auto; padding: 28px 16px 64px; }
+  main { max-width: 960px; margin: 0 auto; padding: 20px 16px 40px; }
   header { margin-bottom: 8px; }
   .brand { display: inline-block; font-weight: 800; font-size: 24px; letter-spacing: -.01em; line-height: 1.1; color: var(--ink); text-decoration: none; }
   .brand::after { content: ""; display: block; width: 40px; height: 4px; margin-top: 6px; background: var(--brand); }
   a.brand:hover { color: var(--ink); }
-  header h1 { font-size: 26px; line-height: 1.25; margin: 18px 0 6px; text-wrap: balance; }
+  header h1 { font-size: 22px; line-height: 1.25; margin: 14px 0 4px; text-wrap: balance; }
   header p { margin: 0; color: var(--muted); max-width: 680px; }
-  .notice { background: var(--notice-bg); border: 1px solid var(--notice-line); border-radius: 10px; padding: 10px 14px; margin: 18px 0; font-size: 14px; }
-  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 18px 20px; margin: 16px 0; }
-  .card > h2 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 12px; }
+  .notice { background: var(--notice-bg); border: 1px solid var(--notice-line); border-radius: 10px; padding: 7px 12px; margin: 10px 0; font-size: 13px; }
+  .card { background: var(--surface); border: 1px solid var(--line); border-radius: 14px; padding: 14px 16px; margin: 10px 0; }
+  .card > h2 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
   .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   @media (max-width: 760px) { .pair { grid-template-columns: 1fr; } }
   .pair h3 { font-size: 14px; margin: 0 0 8px; }
   .embed-box { min-height: 80px; overflow-wrap: anywhere; }
   blockquote.bluesky-embed { margin: 0; }
-  .note-text { font-size: 17px; line-height: 1.5; white-space: pre-wrap; margin: 0 0 10px; overflow-wrap: anywhere; }
+  .note-text { font-size: 16px; line-height: 1.5; white-space: pre-wrap; margin: 0 0 6px; overflow-wrap: anywhere; }
   .meta { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
   .pill { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
   .pill.ok { background: var(--ok-bg); color: var(--ok); }
@@ -105,23 +105,39 @@
   .timeline .when { color: var(--muted); font-size: 13px; }
   .timeline .gap { color: var(--ink-2); font-size: 13px; }
   .summary { margin: 12px 0 0; }
-  .step { padding: 14px 0; border-top: 1px solid var(--line); }
+  .step { padding: 10px 0; border-top: 1px solid var(--line); }
   .step:first-of-type { border-top: 0; padding-top: 0; }
   .step h3 { font-size: 15px; margin: 0 0 6px; display: flex; gap: 8px; align-items: baseline; flex-wrap: wrap; }
   .step h3 .n { color: var(--muted); font-weight: 600; }
   .step p { margin: 0 0 6px; }
-  .meter { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; margin: 8px 0 2px; max-width: 560px; }
+  .meter { display: grid; grid-template-columns: minmax(0, 1fr) auto; gap: 4px 12px; align-items: center; margin: 22px 0 4px; max-width: 560px; }
   .meter .bar { position: relative; height: 8px; border-radius: 999px; background: var(--accent-track); }
   .meter .fill { position: absolute; left: 0; top: 0; bottom: 0; border-radius: 999px; background: var(--brand); }
   .meter .tick { position: absolute; top: -4px; bottom: -4px; width: 2px; margin-left: -1px; background: var(--tick); border-radius: 1px; }
   .meter .fig { font-variant-numeric: tabular-nums; font-weight: 600; font-size: 14px; }
-  .meter .cap { grid-column: 1 / -1; font-size: 13px; color: var(--muted); }
-  .cand { background: var(--raised); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; margin: 10px 0 0; }
+  .meter .tick-label { position: absolute; bottom: 14px; transform: translateX(-50%); font-size: 11px; line-height: 1; color: var(--ink-2); white-space: nowrap; font-variant-numeric: tabular-nums; }
+  .cand { background: var(--raised); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; margin: 8px 0 0; }
   .cand.chosen { background: var(--chosen); border-color: var(--chosen-line); }
   .cand .top { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; font-size: 13px; color: var(--muted); font-variant-numeric: tabular-nums; }
   .cand .excerpt { margin: 6px 0 4px; overflow-wrap: anywhere; }
   .cand .why { font-size: 14px; color: var(--ink-2); margin: 0; }
   .rerun-text { min-height: 96px; }
+  .card.posts { padding: 12px; }
+  .card.posts .embed-box { max-height: 360px; overflow-y: auto; min-height: 0; }
+  .feedback-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
+  .feedback-row .choices { margin: 0; }
+  .why-input { flex: 1 1 200px; min-width: 0; font: inherit; padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--raised); color: var(--ink); }
+  .why-input:focus { outline: 2px solid var(--brand); outline-offset: 1px; }
+  .feedback .meta { margin: 0; }
+  .cand .top-link { margin-left: auto; }
+  details.fold > summary { list-style: none; cursor: pointer; display: flex; flex-wrap: wrap; align-items: baseline; gap: 4px 12px; padding-right: 24px; position: relative; }
+  details.fold > summary::-webkit-details-marker { display: none; }
+  details.fold > summary::after { content: ""; position: absolute; right: 4px; top: 4px; width: 8px; height: 8px; border-right: 2px solid var(--muted); border-bottom: 2px solid var(--muted); transform: rotate(45deg); transition: transform .15s; }
+  details.fold[open] > summary::after { transform: rotate(-135deg); top: 8px; }
+  details.fold > summary:focus-visible { outline: 2px solid var(--brand); outline-offset: 4px; border-radius: 4px; }
+  .fold-title { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); font-weight: 700; }
+  .fold-hint { font-size: 14px; color: var(--ink-2); }
+  .fold-body { margin-top: 12px; }
   .rerun-out:not(:empty) { margin-top: 14px; padding-top: 14px; border-top: 1px solid var(--line); }
   .rerun-title { font-size: 15px; margin: 0 0 10px; }
   .outcome { font-weight: 600; margin: 0 0 12px; padding: 8px 12px; border-radius: 8px; }
@@ -265,7 +281,7 @@ const CONFIG = {
   }
   function exampleNotice() {
     return EXAMPLE ? h('div', { class: 'notice' },
-      h('b', null, 'Example data. '), 'This is a made-up post and note that show what a real result page looks like. ',
+      h('b', null, 'Example: '), 'made-up post and note. ',
       h('a', { href: './' }, 'Look up a real post')) : null;
   }
   function footer(extra) {
@@ -288,19 +304,17 @@ const CONFIG = {
       h('div', { class: 'value' }, value),
       sub ? h('div', { class: 'sub' }, sub) : null);
   }
-  // A score on a 0–1 scale, with the threshold it had to reach.
+  // A score on a 0–1 scale; the threshold it had to reach is the black mark, labeled where it sits.
   function meter(name, value, threshold) {
     const pct = (x) => `${Math.max(0, Math.min(1, x)) * 100}%`;
-    const passed = typeof value === 'number' && typeof threshold === 'number' ? value >= threshold : null;
-    const aria = `${name}: ${fmt3(value)}${typeof threshold === 'number' ? `, threshold ${fmt3(threshold)}${passed ? ', passed' : ''}` : ''}`;
+    const hasT = typeof threshold === 'number';
+    const aria = `${name}: ${fmt3(value)}${hasT ? `, needs at least ${fmt3(threshold)}` : ''}`;
     return h('div', { class: 'meter', role: 'img', 'aria-label': aria, title: aria },
       h('div', { class: 'bar' },
         typeof value === 'number' ? h('div', { class: 'fill', style: `width:${pct(value)}` }) : null,
-        typeof threshold === 'number' ? h('div', { class: 'tick', style: `left:${pct(threshold)}` }) : null),
-      h('div', { class: 'fig' }, fmt3(value)),
-      h('div', { class: 'cap', 'aria-hidden': 'true' },
-        typeof threshold === 'number' ? `Needed at least ${fmt3(threshold)} (the black mark). ` : '',
-        passed === true ? 'Passed.' : ''));
+        hasT ? h('div', { class: 'tick', style: `left:${pct(threshold)}` }) : null,
+        hasT ? h('div', { class: 'tick-label', style: `left:${pct(threshold)}`, 'aria-hidden': 'true' }, `≥ ${fmt3(threshold)}`) : null),
+      h('div', { class: 'fig' }, fmt3(value)));
   }
 
   // ---- front page -----------------------------------------------------------
@@ -373,11 +387,8 @@ const CONFIG = {
       EXAMPLE ? exampleBox(d.example_x_post_text || '')
       : tweetId ? h('p', { class: 'fallback' }, ext(xPostUrl(tweetId), 'View the X post on X'))
       : h('p', { class: 'meta' }, 'X post not available.'));
-    return h('section', { class: 'card' },
-      h('h2', null, 'Same claim, two platforms'),
-      h('div', { class: 'pair' },
-        h('div', null, h('h3', null, 'Bluesky post', d.handle ? h('span', { class: 'meta' }, ` · @${d.handle}`) : null), h('div', { class: 'embed-box' }, bq)),
-        h('div', null, h('h3', null, 'X post the note was written for'), xBox)));
+    return h('section', { class: 'card posts' },
+      h('div', { class: 'pair' }, h('div', { class: 'embed-box' }, bq), xBox));
   }
 
   function noteCard(d, c) {
@@ -397,40 +408,34 @@ const CONFIG = {
   // length, tfidf, embedding or stage3 (labelled matches always reached stage3).
   function pipelineSteps(d, isEdit) {
     const stage = d.stage || 'stage3';
-    const order = ['length', 'tfidf', 'embedding', 'stage3'];
-    const reached = order.indexOf(stage);
+    const reached = ['length', 'tfidf', 'embedding', 'stage3'].indexOf(stage);
     const status = (i) => (i < reached || (i === 3 && reached === 3)
       ? h('span', { class: 'pill ok' }, '✓ Passed')
       : i === reached ? h('span', { class: 'pill no' }, '✕ Stopped here')
       : h('span', { class: 'pill neutral' }, 'Not reached'));
     const t = d.thresholds || {};
     const cands = Array.isArray(d.candidates) ? d.candidates : [];
-    const libNotes = d.library && d.library.notes;
-    const libText = libNotes ? `any of the ${libNotes.toLocaleString()} notes in the library` : 'any note in the library';
     const chosen = cands.find((x) => String(x.note_id) === String(d.chosen_note_id));
 
     let outcome = null;
     if (isEdit) {
-      outcome = chosen
-        ? h('p', { class: 'outcome ok' }, `✓ This version would be labeled, using note #${chosen.rank}.`)
-        : h('p', { class: 'outcome no' }, '✕ This version wouldn’t be labeled.');
+      outcome = chosen ? h('p', { class: 'outcome ok' }, `✓ Would be labeled, using note #${chosen.rank}.`)
+        : stage === 'length' ? h('p', { class: 'outcome no' }, '✕ Too short: posts need more than two words.')
+        : h('p', { class: 'outcome no' }, '✕ Wouldn’t be labeled.');
     }
     return [
       outcome,
       h('div', { class: 'step' },
-        h('h3', null, h('span', { class: 'n' }, '1'), 'Post filters', status(0)),
-        h('p', null, isEdit ? 'Longer than two words.' : 'An original or quote post, in English or with no language tag, longer than two words.')),
-      h('div', { class: 'step' },
-        h('h3', null, h('span', { class: 'n' }, '2'), 'Word overlap (TF-IDF)', status(1)),
-        h('p', null, `How many of the same words the post shares with ${libText}, weighted by how rare the words are.`),
+        h('h3', null, h('span', { class: 'n' }, '1'), 'Word overlap (TF-IDF)', status(1)),
+        h('p', null, 'Words shared with the closest note, weighted by how rare they are.'),
         reached >= 1 ? meter('Highest TF-IDF similarity', d.scores && d.scores.tfidf_max, t.tfidf ?? CONFIG.TFIDF_THRESHOLD) : null),
       h('div', { class: 'step' },
-        h('h3', null, h('span', { class: 'n' }, '3'), 'Meaning (embeddings)', status(2)),
-        h('p', null, `How close the post is in meaning to ${libText}, using text-embedding-3-large.`),
+        h('h3', null, h('span', { class: 'n' }, '2'), 'Meaning (embeddings)', status(2)),
+        h('p', null, 'Closeness in meaning to the closest note (text-embedding-3-large).'),
         reached >= 2 ? meter('Highest embedding similarity', d.scores && d.scores.cosine_max, t.embedding ?? CONFIG.EMBEDDING_THRESHOLD) : null),
       h('div', { class: 'step' },
-        h('h3', null, h('span', { class: 'n' }, '4'), `Top ${cands.length || t.top_k || CONFIG.TOP_K} notes and the model’s check`, reached === 3 ? null : status(3)),
-        h('p', null, 'The most similar notes, in order, each judged by a language model: does this note apply to this post? The highest-ranked note it accepts is the one crossnote uses.'),
+        h('h3', null, h('span', { class: 'n' }, '3'), `Model check on the top ${cands.length || t.top_k || CONFIG.TOP_K} notes`, reached === 3 ? null : status(3)),
+        h('p', null, 'An LLM judges whether each note applies to the post; the highest-ranked one that does is used.'),
         cands.map((x) => {
           const isChosen = chosen && String(x.note_id) === String(chosen.note_id);
           const text = x.note ? decodeEntities(x.note.text) : '';
@@ -440,17 +445,17 @@ const CONFIG = {
               h('span', null, `similarity ${fmt3(x.cosine)}`),
               h('span', null, `TF-IDF ${fmt3(x.tfidf)}`),
               verdictPill(x),
-              isChosen ? h('span', { class: 'pill shown' }, 'Used') : null),
-            h('p', { class: 'excerpt' }, text ? truncate(text, 260) : h('span', { class: 'meta' }, `Note ${x.note_id}`)),
-            x.reason ? h('p', { class: 'why' }, h('b', null, 'Model’s reason: '), x.reason) : null,
-            h('p', { class: 'meta' }, ext(noteUrl(x.note_id), 'Note on X')));
+              isChosen ? h('span', { class: 'pill shown' }, 'Used') : null,
+              h('span', { class: 'top-link' }, ext(noteUrl(x.note_id), 'Note on X'))),
+            h('p', { class: 'excerpt' }, text ? truncate(text, 220) : h('span', { class: 'meta' }, `Note ${x.note_id}`)),
+            x.reason ? h('p', { class: 'why' }, h('b', null, 'Model: '), x.reason) : null);
         })),
     ];
   }
 
   function pipelineCard(d) {
     return h('section', { class: 'card' },
-      h('h2', null, 'What the pipeline did'),
+      h('h2', null, 'Inspect pipeline steps'),
       pipelineSteps(d, false),
       d.library && d.library.name ? h('p', { class: 'meta' }, `Library snapshot ${d.library.name}${d.library.export_date ? `, from the Community Notes export of ${d.library.export_date}` : ''}.`) : null);
   }
@@ -471,16 +476,19 @@ const CONFIG = {
       box.value = text; box.disabled = false; box.placeholder = 'Type a version of the post…';
       run.disabled = false; reset.disabled = false;
     };
-    if (EXAMPLE) {
-      ready(d.example_post_text || '');
-    } else {
+    // Load the post's text the first time the section is opened.
+    let loaded = false;
+    const load = () => {
+      if (loaded) return;
+      loaded = true;
+      if (EXAMPLE) { ready(d.example_post_text || ''); return; }
       const u = new URL('https://public.api.bsky.app/xrpc/app.bsky.feed.getPosts');
       u.searchParams.set('uris', d.uri);
       getJson(u).then(({ ok, body }) => {
         const post = ok && body && body.posts && body.posts[0];
         ready((post && post.record && post.record.text) || '');
       }).catch(() => ready(''));
-    }
+    };
 
     const form = h('form', {
       onsubmit: async (e) => {
@@ -511,80 +519,76 @@ const CONFIG = {
       box,
       h('div', { class: 'choices' }, run, reset));
 
-    return h('section', { class: 'card' },
-      h('h2', null, 'Try a different version'),
-      h('p', null, 'Edit the post and see what the pipeline would have done.'),
-      form, status, out,
-      h('p', { class: 'meta' }, 'Your text is sent to OpenAI to run the pipeline. It isn’t stored, and nothing is labeled. Up to 5 tries an hour.'));
+    // Collapsed by default: a summary line that opens the editor.
+    return h('details', { class: 'card fold', ontoggle: (e) => { if (e.currentTarget.open) load(); } },
+      h('summary', null,
+        h('span', { class: 'fold-title' }, 'Try a different version'),
+        h('span', { class: 'fold-hint' }, 'Edit the post and see what the pipeline would have done')),
+      h('div', { class: 'fold-body' },
+        form, status, out,
+        h('p', { class: 'meta' }, 'Your text is sent to OpenAI to run the pipeline. It isn’t stored, and nothing is labeled. Up to 5 tries an hour.')));
   }
 
+  // One compact row: Yes / Almost / No, an optional why, Send.
   function feedbackCard(d) {
     const key = `crossnote-feedback:${d.uri}`;
+    const labels = { yes: 'Yes', almost: 'Almost', no: 'No', unsure: 'Not sure' };
     const previous = store.get(key);
-    const status = h('p', { class: 'meta', role: 'status', 'aria-live': 'polite' });
-    if (previous) {
-      return h('section', { class: 'card' },
-        h('h2', null, 'Is this a good match?'),
-        h('p', null, `Thanks. You answered “${{ yes: 'Yes', no: 'No', unsure: 'Not sure' }[previous] || previous}”.`));
-    }
+    const box = (...kids) => h('section', { class: 'card tight feedback' }, h('h2', null, 'Is this a good match?'), ...kids);
+    if (previous) return box(h('p', { class: 'meta' }, `Thanks. You answered “${labels[previous] || previous}”.`));
+
     let answer = null;
-    const comment = h('textarea', { id: 'fb-comment', maxlength: '1000', placeholder: 'Optional: why? For example, “the post is criticising the claim, not making it”.' });
-    const send = h('button', { class: 'btn primary', type: 'submit', disabled: true }, 'Send answer');
-    const choice = (value, label) => h('button', {
+    const why = h('input', { type: 'text', class: 'why-input', maxlength: '1000', placeholder: 'Why? (optional)', 'aria-label': 'Why? (optional)' });
+    const send = h('button', { class: 'btn primary', type: 'submit', disabled: true }, 'Send');
+    const status = h('p', { class: 'meta', role: 'status', 'aria-live': 'polite' });
+    const choice = (value) => h('button', {
       class: 'btn', type: 'button', 'aria-pressed': 'false',
       onclick: (e) => {
         answer = value; send.disabled = false;
         for (const b of e.currentTarget.parentNode.children) b.setAttribute('aria-pressed', String(b === e.currentTarget));
       },
-    }, label);
+    }, labels[value]);
     const form = h('form', {
+      class: 'feedback-row',
       onsubmit: async (e) => {
         e.preventDefault();
         if (!answer) return;
-        if (EXAMPLE) { status.textContent = 'This is example data, so the answer wasn’t sent.'; return; }
+        if (EXAMPLE) { status.textContent = 'Example data: nothing was sent.'; return; }
         send.disabled = true; status.textContent = 'Sending…';
         try {
           const r = await fetch(`${CONFIG.API_BASE}/demo/feedback`, {
             method: 'POST', headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ uri: d.uri, answer, comment: comment.value.trim() || undefined }),
+            body: JSON.stringify({ uri: d.uri, answer, comment: why.value.trim() || undefined }),
           });
           const body = await r.json().catch(() => ({}));
           if (!r.ok) throw new Error(body.message || `HTTP ${r.status}`);
           store.set(key, answer);
-          form.replaceWith(h('p', null, 'Thanks, your answer was recorded. It helps us measure how often crossnote is right.'));
+          form.replaceWith(h('p', { class: 'meta' }, 'Thanks for the feedback.'));
           status.textContent = '';
         } catch (err) {
-          status.textContent = `Couldn’t send your answer: ${err.message}`;
+          status.textContent = `Couldn’t send: ${err.message}`;
           send.disabled = false;
         }
       },
     },
-      h('div', { class: 'choices', role: 'group', 'aria-label': 'Does this note apply?' },
-        choice('yes', 'Yes, it applies'), choice('no', 'No, wrong match'), choice('unsure', 'Not sure')),
-      h('label', { class: 'sr-only', for: 'fb-comment' }, 'Comment'),
-      comment,
-      h('div', { style: 'margin-top:10px' }, send));
-    return h('section', { class: 'card' },
-      h('h2', null, 'Is this a good match?'),
-      h('p', null, 'Does the Community Note correct a claim this Bluesky post actually makes?'),
-      form, status,
-      h('p', { class: 'meta' }, 'Your answer is stored with this post’s link and the note ID. We don’t store your IP address or account. If you wrote the post and want the label removed, ',
-        ext(`${CONFIG.REPO_URL}/issues/new?template=wrong_label.yml`, 'report it'), '.'));
+      h('div', { class: 'choices', role: 'group', 'aria-label': 'Is this a good match?' }, choice('yes'), choice('almost'), choice('no')),
+      why, send);
+    return box(form, status);
   }
 
   function resultView(d) {
     const c = (d.candidates || []).find((x) => String(x.note_id) === String(d.chosen_note_id)) || null;
     document.title = 'crossnote explorer · Matched post';
     render(
-      header('Why crossnote labeled this post', 'crossnote matched this Bluesky post to a Community Note written on X for a post making the same claim.'),
+      header('Inspect the pipeline', null),
       exampleNotice(),
-      h('div', { class: 'notice' }, 'This is an automated match and may be wrong. The label is only shown to people who subscribe to ',
-        ext(`https://bsky.app/profile/${CONFIG.LABELER_HANDLE}`, '@' + CONFIG.LABELER_HANDLE), '.'),
+      h('div', { class: 'notice' }, 'Automated match; it may be wrong. Only subscribers to ',
+        ext(`https://bsky.app/profile/${CONFIG.LABELER_HANDLE}`, '@' + CONFIG.LABELER_HANDLE), ' see the label.'),
       sameClaimCard(d, c),
       noteCard(d, c),
+      feedbackCard(d),
       pipelineCard(d),
       rerunCard(d),
-      feedbackCard(d),
       footer(h('a', { href: './' }, 'Look up another post')));
     embedBluesky();
     embedX(c);
