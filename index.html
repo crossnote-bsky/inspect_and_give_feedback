@@ -164,6 +164,8 @@ const CONFIG = {
   // page's origin for feedback to be accepted.
   API_BASE: 'https://crossnote-labeler.fly.dev',
   LABELER_HANDLE: 'crossnote.bsky.social',
+  // The "See an example" post: a real post crossnote labeled.
+  EXAMPLE_URI: 'at://did:plc:g2qwyhkhe3svmrsk3wwytpwm/app.bsky.feed.post/3n2h6l7k6vk2b',
   REPO_URL: 'https://github.com/crossnote-bsky/crossnote_bsky',
   PAPER_URL: 'https://github.com/crossnote-bsky/crossnote_bsky/blob/main/paper/community-notes-across-platforms.pdf',  // switch to arXiv once posted
   SLIDES_URL: 'https://github.com/crossnote-bsky/crossnote_bsky/blob/main/paper/crossnote-slides.pdf',
@@ -180,7 +182,6 @@ const CONFIG = {
   // replaceChildren() would print a skipped (null) section as the text "null".
   const render = (...nodes) => app.replaceChildren(...nodes.filter((n) => n != null && n !== false));
   const params = new URLSearchParams(location.search);
-  const EXAMPLE = params.has('example');
   // Local testing only: ?api=http://localhost:8080 points the page at a local labeler.
   if (/^(localhost|127\.0\.0\.1)$/.test(location.hostname) && /^http:\/\/(localhost|127\.0\.0\.1):\d+$/.test(params.get('api') || '')) {
     CONFIG.API_BASE = params.get('api');
@@ -280,11 +281,6 @@ const CONFIG = {
       h('h1', null, title),
       sub ? h('p', null, sub) : null);
   }
-  function exampleNotice() {
-    return EXAMPLE ? h('div', { class: 'notice' },
-      h('b', null, 'Example: '), 'made-up post and note. ',
-      h('a', { href: './' }, 'Look up a real post')) : null;
-  }
   function footer(extra) {
     return h('footer', null,
       h('p', null, 'More info: ',
@@ -345,14 +341,13 @@ const CONFIG = {
       form, msg,
       h('p', { class: 'meta', id: 'lookup-help' },
         'On Bluesky: ··· → Copy link to post. Works for posts crossnote has labeled. ',
-        h('a', { href: '?example=1' }, 'See an example')));
+        h('a', { href: postHref(CONFIG.EXAMPLE_URI) }, 'See an example')));
   }
 
   // Renders at once and fills in when the numbers arrive, so a slow API never holds up the page.
   function summaryCard() {
     const row = h('div', { class: 'tiles compact' });
     const box = h('section', { class: 'card tight', hidden: true }, h('h2', null, 'Stats at a glance'), row);
-    if (EXAMPLE) return box;
     getJson(`${CONFIG.API_BASE}/demo/summary`).then(({ ok, body }) => {
       const b = (ok && body) || {};
       const n = (x) => (typeof x === 'number' ? x.toLocaleString() : null);
@@ -380,14 +375,10 @@ const CONFIG = {
   // ---- result page ----------------------------------------------------------
   function sameClaimCard(d, c) {
     const tweetId = c && (c.tweet_id || (c.note && c.note.tweet_id));
-    // Example mode shows made-up text instead of embedding posts that don't exist.
-    const exampleBox = (text) => h('div', { class: 'cand' }, h('p', { class: 'excerpt' }, text));
-    const bq = EXAMPLE ? exampleBox(d.example_post_text || '')
-      : h('blockquote', { class: 'bluesky-embed', 'data-bluesky-uri': d.uri, 'data-bluesky-embed-color-mode': 'light' },
+    const bq = h('blockquote', { class: 'bluesky-embed', 'data-bluesky-uri': d.uri, 'data-bluesky-embed-color-mode': 'light' },
           h('p', null, ext(bskyUrl(d.did, d.rkey), 'View this post on Bluesky')));
     const xBox = h('div', { id: 'x-embed', class: 'embed-box' },
-      EXAMPLE ? exampleBox(d.example_x_post_text || '')
-      : tweetId ? h('p', { class: 'fallback' }, ext(xPostUrl(tweetId), 'View the X post on X'))
+      tweetId ? h('p', { class: 'fallback' }, ext(xPostUrl(tweetId), 'View the X post on X'))
       : h('p', { class: 'meta' }, 'X post not available.'));
     return h('section', { class: 'card posts' },
       h('div', { class: 'pair' }, h('div', { class: 'embed-box' }, bq), xBox));
@@ -483,7 +474,6 @@ const CONFIG = {
     const load = () => {
       if (loaded) return;
       loaded = true;
-      if (EXAMPLE) { ready(d.example_post_text || ''); return; }
       const u = new URL('https://public.api.bsky.app/xrpc/app.bsky.feed.getPosts');
       u.searchParams.set('uris', d.uri);
       getJson(u).then(({ ok, body }) => {
@@ -497,7 +487,6 @@ const CONFIG = {
         e.preventDefault();
         const text = box.value.trim();
         if (!text) { status.textContent = 'Type a version of the post first.'; return; }
-        if (EXAMPLE) { status.textContent = 'Trying edits works on real posts only, not on the example.'; return; }
         run.disabled = true; out.replaceChildren();
         status.textContent = 'Running the pipeline… this can take up to 30 seconds.';
         try {
@@ -555,7 +544,6 @@ const CONFIG = {
       onsubmit: async (e) => {
         e.preventDefault();
         if (!answer) return;
-        if (EXAMPLE) { status.textContent = 'Example data: nothing was sent.'; return; }
         send.disabled = true; status.textContent = 'Sending…';
         try {
           const r = await fetch(`${CONFIG.API_BASE}/demo/feedback`, {
@@ -583,7 +571,6 @@ const CONFIG = {
     document.title = 'crossnote explorer · Matched post';
     render(
       header('Inspect the pipeline', null),
-      exampleNotice(),
       h('div', { class: 'notice' }, 'Automated match; it may be wrong. Only subscribers to ',
         ext(`https://bsky.app/profile/${CONFIG.LABELER_HANDLE}`, '@' + CONFIG.LABELER_HANDLE), ' see the label.'),
       sameClaimCard(d, c),
@@ -612,7 +599,6 @@ const CONFIG = {
 
   // ---- embeds ---------------------------------------------------------------
   async function embedBluesky() {
-    if (EXAMPLE) return;
     try {
       await loadScript('https://embed.bsky.app/static/embed.js');
       setTimeout(() => { if (window.bluesky && typeof window.bluesky.scan === 'function') window.bluesky.scan(); }, 800);
@@ -620,7 +606,7 @@ const CONFIG = {
   }
   async function embedX(c) {
     const id = c && (c.tweet_id || (c.note && c.note.tweet_id));
-    if (!id || EXAMPLE) return;
+    if (!id) return;
     try {
       await loadScript('https://platform.twitter.com/widgets.js');
       const box = document.getElementById('x-embed');
@@ -632,18 +618,9 @@ const CONFIG = {
 
   // ---- start ----------------------------------------------------------------
   async function main() {
-    if (EXAMPLE) {
-      try {
-        const r = await getJson('example.json');
-        if (!r.ok) throw new Error(`HTTP ${r.status}`);
-        resultView(r.body);
-      } catch (e) {
-        render(header('Example unavailable'), errorCard('Could not load the example.', String(e)));
-      }
-      return;
-    }
-
     let uri = params.get('uri');
+    // Older example links: ?example=1.
+    if (!uri && params.has('example')) { uri = CONFIG.EXAMPLE_URI; history.replaceState(null, '', postHref(uri)); }
     // Older links: ?did=…&rkey=…, or ?post=<bsky.app link>.
     if (!uri && params.get('did') && params.get('rkey')) uri = `at://${params.get('did')}/app.bsky.feed.post/${params.get('rkey')}`;
     if (!uri && params.get('post')) {

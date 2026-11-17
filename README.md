@@ -4,4 +4,4 @@ The demo page for [crossnote](https://github.com/crossnote-bsky/crossnote_bsky):
 
 Live at **https://crossnote-bsky.github.io/inspect_and_give_feedback/**.
 
-The page reads from the labeler's `/demo` API ([`src/demo-api.ts`](https://github.com/crossnote-bsky/crossnote_bsky/blob/main/src/demo-api.ts)). To preview it, run `python3 -m http.server 8000` here and open `http://localhost:8000/?example=1`, or add `?api=http://localhost:8080` to use a local labeler.
+The page reads from the labeler's `/demo` API ([`src/demo-api.ts`](https://github.com/crossnote-bsky/crossnote_bsky/blob/main/src/demo-api.ts)). To preview it, run `python3 -m http.server 8000` here and open `http://localhost:8000/` (reads from the live Fly API), or add `?api=http://localhost:8080` to use a local labeler.
