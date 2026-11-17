@@ -60,7 +60,7 @@
   .card > h2 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
   .pair { display: grid; grid-template-columns: 1fr 1fr; gap: 18px; }
   @media (max-width: 760px) { .pair { grid-template-columns: 1fr; } }
-  .pair h3 { font-size: 14px; margin: 0 0 8px; }
+  .pair h3 { font-size: 12px; letter-spacing: .08em; text-transform: uppercase; color: var(--muted); margin: 0 0 8px; }
   .embed-box { min-height: 80px; overflow-wrap: anywhere; }
   .note-text { font-size: 16px; line-height: 1.5; white-space: pre-wrap; margin: 0 0 6px; overflow-wrap: anywhere; }
   .meta { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
@@ -422,7 +422,7 @@ const CONFIG = {
       if (!post) { box.replaceChildren(h('p', { class: 'meta' }, 'Couldn’t load the post.'), link); return; }
       const when = toDate((post.record && post.record.createdAt) || d.posted_at);
       box.replaceChildren(
-        h('p', { class: 'by' }, 'Bluesky post', when ? ` · ${fmtTime(when)}` : ''),
+        when ? h('p', { class: 'by' }, fmtTime(when)) : null,
         h('p', { class: 'text' }, linkify((post.record && post.record.text) || '')),
         ...embedParts(post.embed),
         link);
@@ -437,7 +437,9 @@ const CONFIG = {
       tweetId ? h('p', { class: 'fallback' }, ext(xPostUrl(tweetId), 'View the X post on X'))
       : h('p', { class: 'meta' }, 'X post not available.'));
     return h('section', { class: 'card posts' },
-      h('div', { class: 'pair' }, h('div', { class: 'embed-box' }, bq), xBox));
+      h('div', { class: 'pair' },
+        h('div', null, h('h3', null, 'Bluesky post'), h('div', { class: 'embed-box' }, bq)),
+        h('div', null, h('h3', null, 'X post with the Community Note'), xBox)));
   }
 
   function noteCard(d, c) {
@@ -622,8 +624,6 @@ const CONFIG = {
     document.title = 'crossnote explorer · Matched post';
     render(
       header('Inspect the pipeline', null),
-      h('div', { class: 'notice' }, 'Automated match; it may be wrong. Only subscribers to ',
-        ext(`https://bsky.app/profile/${CONFIG.LABELER_HANDLE}`, '@' + CONFIG.LABELER_HANDLE), ' see the label.'),
       sameClaimCard(d, c),
       noteCard(d, c),
       feedbackCard(d),
