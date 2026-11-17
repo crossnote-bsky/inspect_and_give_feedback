@@ -62,7 +62,6 @@
   @media (max-width: 760px) { .pair { grid-template-columns: 1fr; } }
   .pair h3 { font-size: 14px; margin: 0 0 8px; }
   .embed-box { min-height: 80px; overflow-wrap: anywhere; }
-  blockquote.bluesky-embed { margin: 0; }
   .note-text { font-size: 16px; line-height: 1.5; white-space: pre-wrap; margin: 0 0 6px; overflow-wrap: anywhere; }
   .meta { color: var(--muted); font-size: 13px; margin: 6px 0 0; }
   .pill { display: inline-block; padding: 1px 9px; border-radius: 999px; font-size: 12px; font-weight: 600; white-space: nowrap; }
@@ -124,6 +123,14 @@
   .rerun-text { min-height: 96px; }
   .card.posts { padding: 12px; }
   .card.posts .embed-box { max-height: 360px; overflow-y: auto; min-height: 0; }
+  /* The Bluesky post is drawn here, without the poster's name, handle or avatar. */
+  .bsky-post { background: var(--bg); border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; }
+  .bsky-post .by { font-size: 13px; color: var(--muted); margin: 0 0 6px; }
+  .bsky-post .text { white-space: pre-wrap; margin: 0; }
+  .bsky-post .media { display: grid; grid-template-columns: repeat(auto-fit, minmax(120px, 1fr)); gap: 4px; margin-top: 8px; }
+  .bsky-post .media img { width: 100%; max-height: 220px; object-fit: cover; border-radius: 8px; display: block; }
+  .bsky-post .sub-box { border: 1px solid var(--line); border-radius: 8px; padding: 6px 10px; margin-top: 8px; font-size: 14px; }
+  .bsky-post .foot { font-size: 13px; margin: 8px 0 0; }
   .feedback-row { display: flex; flex-wrap: wrap; gap: 8px; align-items: center; }
   .feedback-row .choices { margin: 0; }
   .why-input { flex: 1 1 200px; min-width: 0; font: inherit; padding: 7px 12px; border: 1px solid var(--line); border-radius: 8px; background: var(--raised); color: var(--ink); }
@@ -254,6 +261,17 @@ const CONFIG = {
     return { status: r.status, ok: r.ok, body };
   }
 
+  // The Bluesky post from the public API, fetched once per page.
+  const postCache = new Map();
+  function fetchPost(uri) {
+    if (!postCache.has(uri)) {
+      const u = new URL('https://public.api.bsky.app/xrpc/app.bsky.feed.getPosts');
+      u.searchParams.set('uris', uri);
+      postCache.set(uri, getJson(u).then(({ ok, body }) => (ok && body && body.posts && body.posts[0]) || null).catch(() => null));
+    }
+    return postCache.get(uri);
+  }
+
   // ---- input parsing --------------------------------------------------------
   function parsePostInput(raw) {
     const s = raw.trim();
@@ -373,10 +391,48 @@ const CONFIG = {
   }
 
   // ---- result page ----------------------------------------------------------
+  // Media from an embed view: images, a video thumbnail, a link card, or a quoted post (text only).
+  function embedParts(e) {
+    if (!e) return [];
+    const t = e.$type || '';
+    if (t.startsWith('app.bsky.embed.images')) {
+      return [h('div', { class: 'media' }, (e.images || []).map((im) =>
+        h('img', { src: im.thumb, alt: im.alt || 'Image', loading: 'lazy', referrerpolicy: 'no-referrer' })))];
+    }
+    if (t.startsWith('app.bsky.embed.video')) {
+      return [e.thumbnail ? h('div', { class: 'media' }, h('img', { src: e.thumbnail, alt: e.alt || 'Video', loading: 'lazy', referrerpolicy: 'no-referrer' }))
+        : h('p', { class: 'meta' }, 'Video')];
+    }
+    if (t.startsWith('app.bsky.embed.external')) {
+      const x = e.external || {};
+      return [h('div', { class: 'sub-box' }, ext(x.uri, x.title || x.uri), x.description ? h('div', { class: 'meta' }, truncate(x.description, 160)) : null)];
+    }
+    if (t.startsWith('app.bsky.embed.recordWithMedia')) return [...embedParts(e.media), ...embedParts(e.record)];
+    if (t.startsWith('app.bsky.embed.record')) {
+      const r = e.record && (e.record.record || e.record);
+      const text = r && r.value && r.value.text;
+      return text ? [h('div', { class: 'sub-box' }, h('div', { class: 'meta' }, 'Quoted post'), truncate(text, 280))] : [];
+    }
+    return [];
+  }
+  function bskyPostBox(d) {
+    const box = h('div', { class: 'bsky-post' }, h('p', { class: 'meta' }, 'Loading the Bluesky post…'));
+    fetchPost(d.uri).then((post) => {
+      const link = h('p', { class: 'foot' }, ext(bskyUrl(d.did, d.rkey), 'View on Bluesky'));
+      if (!post) { box.replaceChildren(h('p', { class: 'meta' }, 'Couldn’t load the post.'), link); return; }
+      const when = toDate((post.record && post.record.createdAt) || d.posted_at);
+      box.replaceChildren(
+        h('p', { class: 'by' }, 'Bluesky post', when ? ` · ${fmtTime(when)}` : ''),
+        h('p', { class: 'text' }, linkify((post.record && post.record.text) || '')),
+        ...embedParts(post.embed),
+        link);
+    });
+    return box;
+  }
+
   function sameClaimCard(d, c) {
     const tweetId = c && (c.tweet_id || (c.note && c.note.tweet_id));
-    const bq = h('blockquote', { class: 'bluesky-embed', 'data-bluesky-uri': d.uri, 'data-bluesky-embed-color-mode': 'light' },
-          h('p', null, ext(bskyUrl(d.did, d.rkey), 'View this post on Bluesky')));
+    const bq = bskyPostBox(d);
     const xBox = h('div', { id: 'x-embed', class: 'embed-box' },
       tweetId ? h('p', { class: 'fallback' }, ext(xPostUrl(tweetId), 'View the X post on X'))
       : h('p', { class: 'meta' }, 'X post not available.'));
@@ -474,12 +530,7 @@ const CONFIG = {
     const load = () => {
       if (loaded) return;
       loaded = true;
-      const u = new URL('https://public.api.bsky.app/xrpc/app.bsky.feed.getPosts');
-      u.searchParams.set('uris', d.uri);
-      getJson(u).then(({ ok, body }) => {
-        const post = ok && body && body.posts && body.posts[0];
-        ready((post && post.record && post.record.text) || '');
-      }).catch(() => ready(''));
+      fetchPost(d.uri).then((post) => ready((post && post.record && post.record.text) || ''));
     };
 
     const form = h('form', {
@@ -579,7 +630,6 @@ const CONFIG = {
       pipelineCard(d),
       rerunCard(d),
       footer(h('a', { href: './' }, 'Look up another post')));
-    embedBluesky();
     embedX(c);
   }
 
@@ -598,12 +648,6 @@ const CONFIG = {
   }
 
   // ---- embeds ---------------------------------------------------------------
-  async function embedBluesky() {
-    try {
-      await loadScript('https://embed.bsky.app/static/embed.js');
-      setTimeout(() => { if (window.bluesky && typeof window.bluesky.scan === 'function') window.bluesky.scan(); }, 800);
-    } catch { /* the link stays */ }
-  }
   async function embedX(c) {
     const id = c && (c.tweet_id || (c.note && c.note.tweet_id));
     if (!id) return;
